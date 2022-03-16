@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.forrestdp.guava.kotlin"
-version = "0.0.1"
+version = "0.0.2"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation(platform(kotlin("bom")))
-    implementation("com.google.guava:guava:30.1.1-jre")
+    api("com.google.guava:guava:30.1.1-jre")
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
@@ -46,7 +46,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.withType<KotlinCompile> { 
+tasks.withType<KotlinCompile> {
     kotlinOptions {
         @Suppress("SuspiciousCollectionReassignment")
         freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
@@ -54,24 +54,24 @@ tasks.withType<KotlinCompile> {
 }
 
 publishing {
-    publications { 
+    publications {
         create<MavenPublication>("maven") {
             groupId = "com.github.forrestdp"
             artifactId = "guava-kotlin"
-            version = "0.0.1"
-            
-            pom { 
+            version = "0.0.2"
+
+            pom {
                 name.set("Guava Kotlin")
                 description.set("Kotlin extensions for Google Guava library")
-                
+
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
                         url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
                 }
-                
-                developers { 
+
+                developers {
                     developer {
                         id.set("forrestdp")
                         name.set("Egor Ponomaryov")
