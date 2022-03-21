@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.10"
-    `java-library`
+    java
     `maven-publish`
 }
 
@@ -56,6 +56,7 @@ tasks.withType<KotlinCompile> {
 publishing {
     publications {
         create<MavenPublication>("maven") {
+            from(components["java"])
             groupId = "com.github.forrestdp"
             artifactId = "guava-kotlin"
             version = "0.0.2"
@@ -81,4 +82,9 @@ publishing {
             }
         }
     }
+}
+
+tasks.create<Wrapper>("wrapper") {
+    gradleVersion = "7.4.1"
+    distributionType = Wrapper.DistributionType.ALL
 }
