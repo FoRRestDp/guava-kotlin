@@ -1,25 +1,20 @@
-import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+@Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
-    kotlin("jvm") version "1.6.10"
+    alias(libs.plugins.kotlin)
     java
     `maven-publish`
 }
 
 group = "com.github.forrestdp.guava.kotlin"
-version = "0.0.2"
-
-repositories {
-    mavenCentral()
-}
+version = "0.0.3"
 
 dependencies {
-    implementation(platform(kotlin("bom")))
-    api("com.google.guava:guava:30.1.1-jre")
+    api(libs.guava.core)
 
-    testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit5"))
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.testJunit5)
 }
 
 java {
@@ -28,18 +23,7 @@ java {
 }
 
 kotlin {
-    explicitApi = ExplicitApiMode.Strict
-}
-
-val compileKotlin: KotlinCompile by tasks
-val compileTestKotlin: KotlinCompile by tasks
-
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
-
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+    explicitApi()
 }
 
 tasks.test {
@@ -48,8 +32,8 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        @Suppress("SuspiciousCollectionReassignment")
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
     }
 }
 
@@ -57,34 +41,34 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            groupId = "com.github.forrestdp"
-            artifactId = "guava-kotlin"
-            version = "0.0.2"
-
-            pom {
-                name.set("Guava Kotlin")
-                description.set("Kotlin extensions for Google Guava library")
-
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("forrestdp")
-                        name.set("Egor Ponomaryov")
-                        email.set("egorponomarev93@gmail.com")
-                    }
-                }
-            }
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+            pom.name.set("Guava Kotlin")
+//            pom {
+//                name.set("Guava Kotlin")
+//                description.set("Kotlin extensions for Google Guava library")
+//
+//                licenses {
+//                    license {
+//                        name.set("The Apache License, Version 2.0")
+//                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+//                    }
+//                }
+//
+//                developers {
+//                    developer {
+//                        id.set("forrestdp")
+//                        name.set("Egor Ponomaryov")
+//                        email.set("egorponomarev93@gmail.com")
+//                    }
+//                }
+//            }
         }
     }
 }
 
 tasks.create<Wrapper>("wrapper") {
-    gradleVersion = "7.4.1"
+    gradleVersion = "7.4.2"
     distributionType = Wrapper.DistributionType.ALL
 }
