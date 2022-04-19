@@ -1,5 +1,6 @@
 package com.github.forrestdp.guava.kotlin.collect
 
+import com.google.common.annotations.Beta
 import com.google.common.collect.ImmutableList
 import kotlin.experimental.ExperimentalTypeInference
 
@@ -12,12 +13,6 @@ public fun <T : Any> immutableListOf(vararg elements: T): ImmutableList<T> =
         ImmutableList.copyOf(elements.toList())
     }
 
-@Suppress("FunctionName")
-private inline fun <T : Any> ImmutableList(size: Int, init: (index: Int) -> T): ImmutableList<T> =
-    buildImmutableList {
-        repeat(size) { index -> add(init(index)) }
-    }
-
 @OptIn(ExperimentalTypeInference::class)
 public inline fun <T : Any> buildImmutableList(
     @BuilderInference builderAction: ImmutableList.Builder<T>.() -> Unit,
@@ -27,6 +22,7 @@ public inline fun <T : Any> buildImmutableList(
         .build()
 
 @Suppress("UnstableApiUsage")
+@Beta
 @OptIn(ExperimentalTypeInference::class)
 public inline fun <T : Any> buildImmutableList(
     expectedSize: Int,
@@ -35,6 +31,12 @@ public inline fun <T : Any> buildImmutableList(
     ImmutableList.builderWithExpectedSize<T>(expectedSize)
         .apply(builderAction)
         .build()
+
+@Suppress("FunctionName")
+public inline fun <T : Any> ImmutableList(size: Int, init: (index: Int) -> T): ImmutableList<T> =
+    buildImmutableList {
+        repeat(size) { index -> add(init(index)) }
+    }
 
 public fun <T : Any> Iterable<T>.toImmutableList(): ImmutableList<T> = ImmutableList.copyOf(this)
 
